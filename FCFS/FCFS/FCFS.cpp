@@ -56,7 +56,7 @@ int main() {
 			for (int j = 0; j < 8; j++) {
 				if (i == 0 && j == 0) {
 					P[0].time_CPU += p[0][0];
-					total_CPU_Bursts = p[0][0];
+					total_CPU_Bursts = (float) p[0][0];
 					P[0].time_IO = P[0].time_CPU + p[0][1];
 					P[0].end_time = P[0].time_IO;
 					P[0].process_number = 0;
@@ -85,11 +85,11 @@ int main() {
 
 	//Sorts Process 
 	size = vProcess.size();
-	for (int k = 0; k < vProcess.size(); k++) {
+	for (unsigned int k = 0; k < vProcess.size(); k++) {
 		//find the smallest io in vProcess
 		position = 0;
 		next_up = vProcess[0].end_time;
-		for (int a = 1; a < size; a++) {
+		for (signed int a = 1; a < size; a++) {
 			if (vProcess[a].end_time < next_up) {
 				next_up = vProcess[a].end_time;
 				position = a;
@@ -104,11 +104,11 @@ int main() {
 	}
 
 	//Main iteration
-	for (int i = 2; i < 19; i++) {
+	for (unsigned int i = 2; i < 19; i++) {
 		size = vProcess.size();
 		if (i % 2 == 0) {
 			//Put CPU and IO Burst Times in it's respective Process
-			for (int j = 0; j < 8; j++) {
+			for (unsigned int j = 0; j < 8; j++) {
 				index = 0;
 				while (vProcess[index].process_number != P[j].process_number) {
 					if (index == vProcess.size() - 1) {
@@ -138,7 +138,7 @@ int main() {
 			}
 
 			//Execute Process according to the sort
-			for (int j = 0; j < vProcess.size(); j++) {
+			for (unsigned int j = 0; j < vProcess.size(); j++) {
 				//If process is still in IO time when it is Ready to Execute, then it will start after it finishes it's IO
 				vProcess[j].start_time = last_CPU_endtime;
 				if (vProcess[j].start_time < vProcess[j].end_time)
@@ -151,7 +151,7 @@ int main() {
 			}
 
 			//Check which process is done executing all its data
-			for (int j = 0; j < vProcess.size(); j++) {
+			for (unsigned int j = 0; j < vProcess.size(); j++) {
 				if (vProcess[j].isDone == true) {
 					doneProcess.push_back(vProcess[j]);
 					vProcess.erase(vProcess.begin() + j);
@@ -163,11 +163,11 @@ int main() {
 			size = vProcess.size();
 
 			//Sorts
-			for (int j = 0; j < vProcess.size(); j++) {
+			for (unsigned int j = 0; j < vProcess.size(); j++) {
 				//find the smallest io in vProcess
 				position = 0;
 				next_up = vProcess[0].end_time;
-				for (int a = 1; a < size; a++)
+				for (signed int a = 1; a < size; a++)
 					if (vProcess[a].end_time < next_up) {
 						next_up = vProcess[a].end_time;
 						position = a;
@@ -185,7 +185,7 @@ int main() {
 	cout << "\t\t\tFCFS Scheduling Algorithm\n";
 	cout << "\tWaiting Time\tTurnaround Time\t\tResponse Time" << endl;
 	//Sort Done Process
-	for (int j = 0; j < doneProcess.size(); j++) {
+	for (unsigned int j = 0; j < doneProcess.size(); j++) {
 		//Sort Process by Number
 		index = 0;
 		while (doneProcess[index].process_number != j)
@@ -195,20 +195,21 @@ int main() {
 		cout << "\t\t\t" << doneProcess[index].response_time << "ms\n";
 	}
 
-	time_completion = doneProcess[0].end_time;
+	time_completion = (float) doneProcess[0].end_time;
 	total_waiting += doneProcess[0].waiting_time;
 	total_turnaround += doneProcess[0].end_time;
 	total_response += doneProcess[0].response_time;
-	for (int i = 1; i < doneProcess.size(); i++) {
+	for (unsigned int i = 1; i < doneProcess.size(); i++) {
 		total_waiting += doneProcess[i].waiting_time;
 		total_turnaround += doneProcess[i].end_time;
 		total_response += doneProcess[i].response_time;
 		if (doneProcess[i].end_time > time_completion)
-			time_completion = doneProcess[i].end_time;
+			time_completion = (float) doneProcess[i].end_time;
 	}
 
 	cout << "Avg:\t" << (float)total_waiting / 8 << "ms\t\t" << (float)total_turnaround / 8 << "ms\t\t" << (float)total_response / 8 << "ms\n";
 	cout << "FCFS CPU Utilization: " << setprecision(4) << Calc_CPU_Utilization(total_CPU_Bursts, time_completion) << "%" << endl;
+	counter = 0;
 
 	return 0;
 }
